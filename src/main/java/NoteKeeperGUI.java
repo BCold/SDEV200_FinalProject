@@ -1,13 +1,12 @@
-import java.awt.FlowLayout;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.io.File;  // Import the File class
-import java.io.IOException;  // Import the IOException class to handle errors
-import java.io.FileWriter;   // Import the FileWriter class
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
+import java.io.File;
+import java.io.IOException; 
+import java.io.FileWriter;
+import java.io.FileNotFoundException; 
+import java.util.Scanner;
 
 class NoteKeeperGUI extends JFrame{
   // Initialization
