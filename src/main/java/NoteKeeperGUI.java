@@ -15,10 +15,13 @@ class NoteKeeperGUI extends JFrame{
   private JTextArea noteBodyTxt;
   private JTable noteListTbl;
   private JButton saveBtn, deleteBtn, clearBtn;
-  private JPanel noteEditorPanel, noteListPanel, buttonPanel;
+  private JPanel parentPanel, noteEditorPanel, noteListPanel, buttonPanel;
 
   ArrayList<Note> notes = new ArrayList<Note>(); // ArrayList of Notes
-  String notesDirectory = "src/main/notes/"; // Path to notes directory
+  String notesDirectory = System.getProperty("user.dir") + File.separator + "Notes" + File.separator;
+  File createNewDirectory = new File(notesDirectory);
+  boolean test = createNewDirectory.mkdirs();
+  //String notesDirectory = "src/main/notes/"; // Path to notes directory
 
   // Create NoteKeeper GUI
   public void showGUI(){
@@ -27,7 +30,12 @@ class NoteKeeperGUI extends JFrame{
     setTitle("Note Keeper");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize(500, 400);
-    setLayout(new BorderLayout(5,5));
+    setLayout(new GridLayout(1,1));
+    setLocationRelativeTo(null);
+
+    parentPanel = new JPanel();
+    parentPanel.setSize(new Dimension(getSize()));
+    parentPanel.setLayout(new BorderLayout(5,5));
 
     // Define note editor panel
     noteEditorPanel = new JPanel();
@@ -93,8 +101,10 @@ class NoteKeeperGUI extends JFrame{
     noteListPanel.add(noteListScrollPane, BorderLayout.CENTER);
 
     // Add panels to the JFrame
-    add(noteEditorPanel, BorderLayout.CENTER);
-    add(noteListPanel, BorderLayout.LINE_START);
+    parentPanel.add(noteEditorPanel, BorderLayout.CENTER);
+    parentPanel.add(noteListPanel, BorderLayout.LINE_START);
+
+    add(parentPanel);
 
     PopulateNotes();
 
@@ -102,6 +112,17 @@ class NoteKeeperGUI extends JFrame{
     setVisible(true);
 
     // Add event listeners 
+    
+      parentPanel.addComponentListener(new ComponentAdapter() 
+      {  
+              public void componentResized(ComponentEvent evt) {
+                 parentPanel.setSize(new Dimension(getSize()));
+                 noteEditorPanel.setLayout(new FlowLayout(FlowLayout.CENTER, parentPanel.getWidth(), 5));
+
+              }
+      });
+
+    
     clearBtn.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
         // If editor fields are not empty, clear them. Otherwise provide feedback to the user.
