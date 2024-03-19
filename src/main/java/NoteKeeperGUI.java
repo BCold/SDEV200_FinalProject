@@ -5,17 +5,14 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException; 
 import java.io.FileWriter;
-import java.io.FileNotFoundException; 
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 class NoteKeeperGUI extends JFrame{
-  // Initialization
-  private JLabel noteTitleLbl, noteBodyLbl, noteListLbl;
   private JTextField noteTitleTxt;
   private JTextArea noteBodyTxt;
   private JTable noteListTbl;
-  private JButton saveBtn, deleteBtn, clearBtn;
-  private JPanel parentPanel, noteEditorPanel, noteListPanel, buttonPanel;
+  private JPanel noteEditorPanel;
 
   ArrayList<Note> notes = new ArrayList<Note>(); // ArrayList of Notes
   String notesDirectory = System.getProperty("user.dir") + File.separator + "Notes" + File.separator;
@@ -26,52 +23,70 @@ class NoteKeeperGUI extends JFrame{
   // Create NoteKeeper GUI
   public void showGUI(){
 
+    Dimension verticalSpacer = new Dimension(0,5);
+
     // Define JFrame properties
     setTitle("Note Keeper");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(500, 400);
-    setLayout(new GridLayout(1,1));
+    setSize(800, 650);
+    setLayout(new BorderLayout(5,5));
     setLocationRelativeTo(null);
-
-    parentPanel = new JPanel();
-    parentPanel.setSize(new Dimension(getSize()));
-    parentPanel.setLayout(new BorderLayout(5,5));
+    getContentPane().setBackground(Color.DARK_GRAY);
 
     // Define note editor panel
     noteEditorPanel = new JPanel();
-    noteEditorPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 640, 5));
+    LayoutManager testLayout = new BoxLayout(noteEditorPanel, BoxLayout.PAGE_AXIS);
+    noteEditorPanel.setLayout(testLayout);
+    noteEditorPanel.setBackground(Color.DARK_GRAY);
+
 
     // Define the components to be added to the notes editor panel
-    noteTitleLbl = new JLabel("Title");
-    noteTitleLbl.setFont(new Font("Arial", Font.BOLD, 12));
-    
+      // Initialization
+    JLabel noteTitleLbl = new JLabel("Title");
+    noteTitleLbl.setFont(new Font("Arial", Font.BOLD, 16));
+    noteTitleLbl.setForeground(Color.WHITE);
+
     noteTitleTxt = new JTextField(20);
-    
+    noteTitleTxt.setMaximumSize(new Dimension(getWidth(),20));
+    noteTitleTxt.setBackground(Color.getHSBColor(0,0,0.15f));
+    noteTitleTxt.setForeground(Color.WHITE);
 
-    noteBodyLbl = new JLabel("Body");
-    noteBodyLbl.setFont(new Font("Arial", Font.BOLD, 12));
+    JLabel noteBodyLbl = new JLabel("Body");
+    noteBodyLbl.setFont(new Font("Arial", Font.BOLD, 16));
+    noteBodyLbl.setForeground(Color.WHITE);
 
-    noteBodyTxt = new JTextArea(17, 32);
+    noteBodyTxt = new JTextArea();
     noteBodyTxt.setLineWrap(true);
     noteBodyTxt.setWrapStyleWord(true);
+    //noteBodyTxt.setMaximumSize(new Dimension(getWidth(),5));
+    noteBodyTxt.setBackground(Color.getHSBColor(0,0,0.15f));
+    noteBodyTxt.setForeground(Color.WHITE);
     JScrollPane noteBodyScrollPane = new JScrollPane(noteBodyTxt);
+    noteBodyScrollPane.setVisible(false);
 
     // Add components to the note editor panel
 
+    noteEditorPanel.add(Box.createRigidArea(verticalSpacer));
     noteEditorPanel.add(noteTitleLbl);
+    noteEditorPanel.add(Box.createRigidArea(verticalSpacer));
     noteEditorPanel.add(noteTitleTxt);
+    noteEditorPanel.add(Box.createRigidArea(verticalSpacer));
     noteEditorPanel.add(noteBodyLbl);
+    noteEditorPanel.add(Box.createRigidArea(verticalSpacer));
+    noteEditorPanel.add(noteBodyTxt);
     noteEditorPanel.add(noteBodyScrollPane);
+    noteEditorPanel.add(Box.createRigidArea(verticalSpacer));
 
     // Define the button panel
-    buttonPanel = new JPanel();
-    buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+      JPanel buttonPanel = new JPanel();
+      buttonPanel.setLayout(new FlowLayout());
+      buttonPanel.setBackground(Color.DARK_GRAY);
 
     // Define the components to be added to the button panel
 
-    clearBtn = new JButton("Clear");
-    saveBtn = new JButton("Save");
-    deleteBtn = new JButton("Delete");
+      JButton clearBtn = new JButton("Clear");
+      JButton saveBtn = new JButton("Save");
+      JButton deleteBtn = new JButton("Delete");
 
     // Add components to the button panel
     buttonPanel.add(clearBtn);
@@ -83,28 +98,36 @@ class NoteKeeperGUI extends JFrame{
 
 
     // Define the note list panel
-    noteListPanel = new JPanel();
+    JPanel noteListPanel = new JPanel();
     noteListPanel.setLayout(new BorderLayout());
+    noteListPanel.setBackground(Color.DARK_GRAY);
 
     // Define the components to be added to the notes list panel
-    noteListLbl = new JLabel("Notes", SwingConstants.CENTER);
-    noteListLbl.setFont(new Font("Arial", Font.BOLD, 12));
-    
+    JLabel noteListLbl = new JLabel("Notes", SwingConstants.CENTER);
+    noteListLbl.setFont(new Font("Arial", Font.BOLD, 16));
+    noteListLbl.setForeground(Color.WHITE);
+
     noteListTbl = new JTable();
-    
+    noteListTbl.setBackground(Color.getHSBColor(0,0,0.15f));
+    noteListTbl.setForeground(Color.WHITE);
+
     JScrollPane noteListScrollPane = new JScrollPane(noteListTbl);
-    noteListScrollPane.setVisible(true);
+    //noteListScrollPane.setVisible(false);
     noteListScrollPane.setPreferredSize(new Dimension(120, 100));
+    noteListScrollPane.setMaximumSize(new Dimension(getWidth() / 4, getHeight()));
+    noteListPanel.setBackground(Color.DARK_GRAY);
 
     // Add components to the notes list panel
     noteListPanel.add(noteListLbl, BorderLayout.NORTH);
+    //noteListPanel.add(noteListTbl, BorderLayout.CENTER);
     noteListPanel.add(noteListScrollPane, BorderLayout.CENTER);
 
     // Add panels to the JFrame
-    parentPanel.add(noteEditorPanel, BorderLayout.CENTER);
-    parentPanel.add(noteListPanel, BorderLayout.LINE_START);
+    add(noteEditorPanel, BorderLayout.CENTER);
+    add(noteListPanel, BorderLayout.LINE_START);
+    add(Box.createRigidArea(new Dimension(2,0)), BorderLayout.LINE_END);
 
-    add(parentPanel);
+    //add(parentPanel);
 
     PopulateNotes();
 
@@ -112,17 +135,17 @@ class NoteKeeperGUI extends JFrame{
     setVisible(true);
 
     // Add event listeners 
-    
-      parentPanel.addComponentListener(new ComponentAdapter() 
-      {  
+
+      // Change component positioning during resizing of window. parentPanel JPanel is used to ensure real-time repositioning. 
+      // A bug still exists in which component positioning is incorrect with more extreme resizing(i.e. going from default size to a maximized window)
+      addComponentListener(new ComponentAdapter()
+      {
               public void componentResized(ComponentEvent evt) {
-                 parentPanel.setSize(new Dimension(getSize()));
-                 noteEditorPanel.setLayout(new FlowLayout(FlowLayout.CENTER, parentPanel.getWidth(), 5));
 
               }
       });
 
-    
+
     clearBtn.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
         // If editor fields are not empty, clear them. Otherwise provide feedback to the user.
@@ -134,7 +157,7 @@ class NoteKeeperGUI extends JFrame{
         }
       }
     });
-    
+
     saveBtn.addActionListener(new ActionListener(){
       public void actionPerformed(ActionEvent e){
         CreateNote();
@@ -145,7 +168,7 @@ class NoteKeeperGUI extends JFrame{
       public void actionPerformed(ActionEvent e){
         // If note exists, confirm delete action with user before deletion. Otherwise inform the user that the note does not exist.
         boolean noteExists = CheckNoteExists();
-        
+
         if(noteExists){
           if(DisplayConfirmDialog("Are you sure you want to delete this note?", "Delete Note?") == 0){
             DeleteNote();
@@ -206,12 +229,12 @@ class NoteKeeperGUI extends JFrame{
         e.printStackTrace();
     }
   }
-  
+
   // Create a new note
   private void CreateNote(){
     // If note title is invalid display error message. Otherwise, create a new note.
     if(ValidateNoteTitle()){
-      
+
         if(CheckNoteExists()){
           DisplayErrorDialog("A note with that name already exists.", "Error");
         }
@@ -226,26 +249,26 @@ class NoteKeeperGUI extends JFrame{
         }
     }
   }
-    
+
   // Save the passed note object to a file.
   private void SaveNote(Note note){
-    
+
     // Create a file. Catch any IO exceptions
     try {
       File noteFile = new File(notesDirectory + note.getTitle() + ".txt");
       noteFile.createNewFile();
-      
+
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
     }
-    
+
     // Write to the file. Catch any IO exceptions
     try {
       FileWriter noteWriter = new FileWriter(notesDirectory + note.getTitle() + ".txt");
       noteWriter.write(note.getBody());
       noteWriter.close();
-      
+
     } catch (IOException e) {
       System.out.println("An error occurred.");
       e.printStackTrace();
@@ -256,7 +279,7 @@ class NoteKeeperGUI extends JFrame{
   private void DeleteNote(){
     // Initialization
     File noteFile = new File(notesDirectory + noteTitleTxt.getText() + ".txt");
-    
+
     // Delete the file. Provider user feedback that the file has been deleted.
       if(noteFile.delete()){
         DisplayInfoDialog("File '" + noteFile.getName() + "'" + " Successfully Deleted.", "File Deleted");
@@ -294,7 +317,7 @@ class NoteKeeperGUI extends JFrame{
     if(noteTitleTxt.getText().isEmpty()){
       DisplayErrorDialog("Title cannot be empty", "Error");
     }
-    
+
     else if(noteTitleTxt.getText().contains(".")){
       DisplayErrorDialog("Title cannot contain a period.", "Error");
 
@@ -309,7 +332,7 @@ class NoteKeeperGUI extends JFrame{
     }
 
     return isValid;
-    
+
   }
 
   // Populate the notes ArrayList with the note files held within the notes directory
@@ -317,14 +340,14 @@ class NoteKeeperGUI extends JFrame{
     // Initialization
     File directory = new File(notesDirectory);
     File[] directoryListing = directory.listFiles();
-    
+
     // For each file create a note object
     for (File file : directoryListing) {
       if (file.isFile()){
         LoadNote(file);
       }
     }
-    
+
     PopulateNotesTable(notes);
   }
 
@@ -343,7 +366,7 @@ class NoteKeeperGUI extends JFrame{
     noteListTbl.setModel(new javax.swing.table.DefaultTableModel(data, columnName));
     noteListTbl.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
   }
-  
+
   // Clear Note Editor input fields
   private void ClearNoteEditor(){
     noteTitleTxt.setText("");
